@@ -103,23 +103,6 @@ angular.module('mychat.controllers', ['firebase'])
   //$scope.$on('$ionicView.enter', function(e) {
   //});
 
-  // Sorting
-  $scope.sortMethod = "createdAt";
-
-  //Stamps
-
-  $ionicModal.fromTemplateUrl('templates/stampModal.html', {
-    scope: $scope
-  }).then(function(stampModal) {
-    $scope.stampModal = stampModal;
-  });
-
-  $scope.sendStamp = function (msg) {
-    $scope.stampModal.hide()
-    $scope.sendMessage($scope.displayname.displayname + 
-      " sent a stamp (" + msg + ")");
-  }
-
   // Chats
   console.log("Chat Controller Initialized");
   $scope.chats = Chats.all();

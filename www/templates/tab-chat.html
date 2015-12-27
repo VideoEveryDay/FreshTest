@@ -2,26 +2,6 @@
   <ion-content>
 
     <div ng-show="roomName">
-      <div class="card">
-        <button ng-click="stampModal.show()" class="button button-clear button-positive fullWidth"> Send an eStamp </button>
-      </div>
-
-      <div class="card">
-        <label class="item item-input item-select">
-          <div class="input-label">
-            Sorting
-          </div>
-          <select ng-model="sortMethod">
-            <option value="-createdAt">Time (ASC)</option>
-            <option value="createdAt">Time (DEC)</option>
-            <option value="message">Alphabetical (ASC)</option>
-            <option value="-message">Alphabetical (DEC)</option>
-            <option value="from">Sender</option>
-            <option value="">Random </option>
-          </select>
-        </label>
-      </div>
-
       <ion-list>
         <ion-item class="item item-input-inset">
           <label class="item-input-wrapper">
