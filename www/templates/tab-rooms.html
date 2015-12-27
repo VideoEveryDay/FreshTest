@@ -1,0 +1,67 @@
+<ion-view view-title="People">
+  <ion-content>
+    
+    <!-- <div>
+      <button class="button button-clear button-full button-positive" ng-click="requestNewChat()">Find Someone New</button>
+      </button>
+    </div>-->
+
+    <div class="card">
+      <!-- <div class="item item-text-wrap">
+        <p class="custom-style-p"><strong>
+          I'm looking for...
+        </strong></p>
+      </div> -->
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Gender
+        </div>
+        <select ng-model="gender">
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Unspecified">Unspecified</option>
+        </select>
+      </label>
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Grade
+        </div>
+        <select ng-model="grade">
+          <option value="2016">2016</option>
+          <option value="2017">2017</option>
+          <option value="2018">2018</option>
+          <option value="2019">2019</option>
+        </select>
+      </label>
+      <button class="button button-full button-positive button-no-margin" ng-click="requestNewChat(gender, grade)">Chat With Someone New</button>
+    </div>
+    
+    <ion-list ng-show="rooms">
+      <!-- {{rooms}} -->
+      <ion-item class="item-icon-left" ng-repeat="room in rooms | orderBy: sortMethod" type="item-text-wrap" ng-if="currentUserId === room.roomUid1 || currentUserId === room.roomUid2" ng-click="openChatRoom(room.id)">
+        <h2>
+          <span ng-init="isFirstUser = (room.roomUid1 === currentUserId)"></span>
+          <span ng-init="room.whichNameUid = (isFirstUser) ? room.nameUid1 : room.nameUid2"></span>
+          <span ng-init="room.random = random()"></span>
+          <!-- <span>
+            {{room.whichNameUid}}
+          </span> -->
+          <span ng-if="isFirstUser">
+            {{room.nameUid1}}
+          </span>
+          <span ng-if="!(isFirstUser)">
+            {{room.nameUid2}}
+          </span>
+          <!-- <span class="customFloatRight" ng-if="hasNewChatsInRoomsArray.indexOf(room.id) != -1">new</span> -->
+          
+        </h2>
+      </ion-item>
+    </ion-list>
+    <ion-list ng-hide="rooms.length">
+      <ion-item class="textCenter">
+        <i class="icon ion-loading-c"></i> Loading Rooms
+      </ion-item>
+    </ion-list>
+
+  </ion-content>
+</ion-view>    

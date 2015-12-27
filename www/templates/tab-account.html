@@ -1,0 +1,49 @@
+<ion-view view-title="Account">
+  <ion-content>
+    
+    <div class="card">
+      <div class="item item-divider">
+        Account Settings: {{displayname.displayname}}
+      </div>
+      <div class="item">
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Gender
+          </div>
+          <select disabled ng-model="displayname.profile.gender">
+            <option>Male</option>
+            <option>Female</option>
+          </select>
+        </label>
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Grade
+          </div>
+          <select disabled ng-model="displayname.profile.grade">
+            <option>2016</option>
+            <option>2017</option>
+            <option>2018</option>
+            <option>2019</option>
+          </select>
+        </label>
+        <!-- <div class="textCenter">
+          <button class="button button-small button-full button-clear button-positive" ng-click="updateProfile(displayname.profile.gender)">
+            Update Profile    
+          </button>
+        </div> -->    
+      </div>
+    </div>
+
+    <div class="list textCenter">
+        <div ng-click="modalDisclaimer.show()" class="positive">
+          Disclaimer
+        </div>
+    </div>
+
+    <div class="padding">
+      <button class="button button-block button-positive" ng-click="logout()">
+        Logout    
+      </button>
+    </div>
+  </ion-content>
+</ion-view>

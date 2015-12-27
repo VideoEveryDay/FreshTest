@@ -1,0 +1,80 @@
+<ion-view hide-nav-bar="true">
+  
+  
+  <ion-content class="padding custom-gradient-bg">
+    <div class="list">
+      <!-- <img src="img/Logo_PNG.png" class="logo"> -->
+      <br />
+      <!-- <div class="logoText">
+        Create an Account
+      </div> -->
+    </div>
+
+    <!-- If remove cutom gradient, remove custom-no-box-shadow to this element -->
+    <div class="list card padding custom-no-box-shadow">
+
+      <label class="item item-input item-select">
+          <div class="input-label">
+            Gender
+          </div>
+          <select ng-model="user.gender">
+            <option>Male</option>
+            <option>Female</option>
+            <option>Unspecified</option>
+          </select>
+        </label>
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Grade
+          </div>
+          <select ng-model="user.grade">
+            <option>2016</option>
+            <option>2017</option>
+            <option>2018</option>
+            <option>2019</option>
+          </select>
+        </label>
+      <label class="item item-input">
+        <span class="input-label">Email Address</span>
+        <input ng-model="user.email" type="text">
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Password</span>
+        <input ng-model="user.password" type="password">
+      </label>
+      <button class="button button-full button-positive" ng-click="createUser(user)">
+        Create New Account
+      </button>
+
+
+    </div>
+    
+    <br />
+    <div class="list textCenter custom-white-text">
+      Already have an account? <a ng-click="modal.show()" class="positive custom-underline"> Sign in</a>
+    </div>
+    
+
+    <!-- <div class="list textCenter">
+      <button ng-click="modal.show()" class="button button-outline button-positive icon-left ion-person-add">
+        Log In
+      </button>
+    </div>
+    <div class="list textCenter">
+      <div ng-click="modalDisclaimer.show()" class="positive">
+        Disclaimer
+      </div>
+    </div> -->
+  </ion-content>
+
+
+  
+  <!-- <div class="bar bar-footer bar-light textCenter">
+    <div class="custom-margin-auto">
+      Already have an account? <a ng-click="modal.show()" class="positive"> Sign in</a>
+    </div> 
+  </div> -->
+
+</ion-view>
+
+

@@ -1,0 +1,60 @@
+<ion-view view-title="Chat Room {{roomName}}">
+  <ion-content>
+
+    <div ng-show="roomName">
+      <div class="card">
+        <button ng-click="stampModal.show()" class="button button-clear button-positive fullWidth"> Send an eStamp </button>
+      </div>
+
+      <div class="card">
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Sorting
+          </div>
+          <select ng-model="sortMethod">
+            <option value="-createdAt">Time (ASC)</option>
+            <option value="createdAt">Time (DEC)</option>
+            <option value="message">Alphabetical (ASC)</option>
+            <option value="-message">Alphabetical (DEC)</option>
+            <option value="from">Sender</option>
+            <option value="">Random </option>
+          </select>
+        </label>
+      </div>
+
+      <ion-list>
+        <ion-item class="item item-input-inset">
+          <label class="item-input-wrapper">
+            <input type="text" ng-model="IM.textMessage" placeholder="Type in your message...">
+          </label>
+          <button ng-click="sendMessage(IM.textMessage)" class="button button-small button-balanced">
+            Send
+          </button>
+        </ion-item>
+        
+        <ion-item ng-hide="chats" class="textCenter">
+          <i class="icon ion-loading"></i> Loading Chats
+        </ion-item>
+
+        <ion-item ng-if="chats.length == 0" class="textCenter">
+          <h4> No current messages. Be the first to send one!</h4>
+        </ion-item>
+
+        <ion-item class="" ng-repeat="chat in chats | orderBy: sortMethod" type="item-text-wrap">  <h4>{{chat.from}}</h4>
+          <span am-time-ago="chat.createdAt" class="item-note"></span>
+          <p class="item-text-wrap chat-wrap">{{chat.message}}</p>
+          <ion-option-button class="button-assertive" ng-click="remove(chat)">
+            Press to Delete
+          </ion-option-button>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <ion-list ng-hide="roomName">
+      <ion-item class="textCenter">
+        <h4>Please select a person to chat.</h4>
+      </ion-item>
+    </ion-list>
+
+  </ion-content>
+</ion-view>

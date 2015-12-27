@@ -1,0 +1,86 @@
+/* Empty. Add your own CSS if you like */
+
+.logo {
+    display: block;
+    position: relative;
+    width: 60%;
+    margin: 0 auto;
+}
+/*.logoText {
+    text-align: center;
+    font-size: 28px;
+    font-family: cursive;
+}*/
+.logoText {
+    text-align: center;
+    font-size: 20px;
+}
+.item-note {
+    font-size: 10px;
+    margin-top: -22px;
+    margin-right: -35px;
+}
+.textCenter {
+    text-align: center;
+}
+.item-text-wrap.chat-wrap {
+    white-space: normal;
+}
+.customFloatRight {
+    float: right;
+    color: #aaa;
+    margin-right: 35px;
+}
+.ordered-list {
+    list-style: decimal;
+    padding-left: 25px;
+}
+.ordered-list li {
+    margin-bottom: 10px;
+}
+.custom-style-p.custom-style-p {
+    font-size: 16px;
+    padding-left: 25px;
+    margin-bottom: 10px;
+}
+.textRight {
+    text-align: right;
+}
+.fullWidth {
+    width: 100%;
+}
+.custom-h3.custom-h3 {
+    margin-top: 10px;
+}
+.marginTop {
+    margin-top: 20px;
+}
+.button-no-margin.button-no-margin {
+    margin: 0;
+}
+.custom-underline {
+    text-decoration: underline;
+}
+.custom-margin-auto {
+    margin: auto;
+}
+
+/* Custom Gradient */
+.custom-gradient-bg {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#388DF5+0,94E4AC+100 */
+    background: #388DF5; /* Old browsers */
+    background: -moz-linear-gradient(-45deg, #388DF5 0%, #94E4AC 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(-45deg, #388DF5 0%,#94E4AC 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(135deg, #388DF5 0%,#94E4AC 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    
+}
+.custom-no-box-shadow {
+    box-shadow: none;
+}
+.custom-white-text {
+    color: white;
+}
+.custom-white-text a {
+    color: white;
+    font-weight: bold;
+} 
