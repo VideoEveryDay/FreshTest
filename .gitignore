@@ -1,0 +1,14 @@
+# gulp file not synced
+gulpfile.js
+
+# sass not used
+scss/
+
+# platform builds not synced
+platforms/
+
+# resources not synced
+resources/
+
+
+
