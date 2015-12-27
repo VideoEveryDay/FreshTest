@@ -213,53 +213,78 @@ angular.module('mychat.controllers', ['firebase'])
 
   $scope.requestNewChat = function(gender, grade) {
 
-    // Functional code with OpenToChat (now refactoring)
-    ref.child('users').once('value', function (snapshot) {
-      var keepChecking = true;
+    ref.child('usersLookingToChat').once('value', function (snapshot) {
+      usersLookingToChat = snapshot.val();
 
-      // Create object of all items in hasChatsWith property
-      var hasChatsWith = snapshot.child($scope.currentUserId)
-        .child('hasChatsWith').val();
+      if (usersLookingToChat != null && 
+          usersLookingToChat.hasOwnProperty(grade) && 
+          usersLookingToChat[grade].hasOwnProperty(gender) ) {
+        
+        makeNewChat(
+          $scope.currentUserId,
+          $scope.displayname.displayname,
+          usersLookingToChat[grade][gender]["id"],
+          usersLookingToChat[grade][gender]["displayname"]
+          );
 
-      var hasChatsWithArray = [];
-      for (var key in hasChatsWith) {
-          hasChatsWithArray.push(hasChatsWith[key]);
+      }
+      else {
+        ref.child('usersLookingToChat').child(grade).child(gender).set({
+          displayname: $scope.displayname.displayname,
+          id: $scope.currentUserId
+        });
       }
 
-      console.log("Looking for chats");
-
-      snapshot.forEach(function (userOpenToChat) {
-        if (keepChecking) {
-
-          var userRefId = userOpenToChat.key();
-
-          if ( (userRefId != $scope.currentUserId) && 
-          (hasChatsWithArray.indexOf(userRefId) === -1) ) {
-
-            if (userOpenToChat.child('openToChat').val() &&
-                userOpenToChat.child('profile').child('gender') == gender &&
-                userOpenToChat.child('profile').child('grade') == grade
-                ) {  
-
-              var userRefName = userOpenToChat.child('displayname').val();
-              
-              makeNewChat($scope.currentUserId, $scope.displayname.displayname, userRefId, userRefName);
-            
-              // COMMENT OUT FOR DEVELOPMENT - UNCOMMENT LATER
-              ref.child('users').child(userRefId).child('openToChat').set(false);
-              
-              keepChecking = false;
-            }
-          }
-        }
-      });
-
-      if (keepChecking) {
-        console.log("Looking for chats");
-        alert("Waiting for someone else to connect...");
-        ref.child('users').child($scope.currentUserId).child('openToChat').set(true);
-      }
     });
+
+
+    // // Functional code with OpenToChat (now refactoring)
+    // ref.child('users').once('value', function (snapshot) {
+    //   var keepChecking = true;
+
+    //   // Create object of all items in hasChatsWith property
+    //   var hasChatsWith = snapshot.child($scope.currentUserId)
+    //     .child('hasChatsWith').val();
+
+    //   var hasChatsWithArray = [];
+    //   for (var key in hasChatsWith) {
+    //       hasChatsWithArray.push(hasChatsWith[key]);
+    //   }
+
+    //   console.log("Looking for chats");
+
+    //   snapshot.forEach(function (userOpenToChat) {
+    //     if (keepChecking) {
+
+    //       var userRefId = userOpenToChat.key();
+
+    //       if ( (userRefId != $scope.currentUserId) && 
+    //       (hasChatsWithArray.indexOf(userRefId) === -1) ) {
+
+    //         if (userOpenToChat.child('openToChat').val() &&
+    //             userOpenToChat.child('profile').child('gender') == gender &&
+    //             userOpenToChat.child('profile').child('grade') == grade
+    //             ) {  
+
+    //           var userRefName = userOpenToChat.child('displayname').val();
+              
+    //           makeNewChat($scope.currentUserId, $scope.displayname.displayname, userRefId, userRefName);
+            
+    //           // COMMENT OUT FOR DEVELOPMENT - UNCOMMENT LATER
+    //           ref.child('users').child(userRefId).child('openToChat').set(false);
+              
+    //           keepChecking = false;
+    //         }
+    //       }
+    //     }
+    //   });
+
+    //   if (keepChecking) {
+    //     console.log("Looking for chats");
+    //     alert("Waiting for someone else to connect...");
+    //     ref.child('users').child($scope.currentUserId).child('openToChat').set(true);
+    //   }
+    // });
   };
 
   var makeNewChat = function(uid1, u1Name, uid2, u2Name) {
