@@ -10,5 +10,6 @@ platforms/
 # resources not synced
 resources/
 
-
+# ionic io
+.io-config.json
 
