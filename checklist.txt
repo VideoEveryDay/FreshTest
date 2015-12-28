@@ -1,0 +1,19 @@
+Production Checklist
+
+- Google Analytics: https://blog.nraboy.com/2014/06/using-google-analytics-ionicframework/
+
+- Automatic Password Login with localStorage
+
+- 
+
+
+
+Future Updates (or Production)
+
+- Ionic Web Client 
+
+- Push Notifications via server (or Ionic Push?)
+
+- Ionic Deploy
+
+- Hype
