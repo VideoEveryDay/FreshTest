@@ -187,8 +187,7 @@ angular.module('mychat.controllers', ['firebase'])
   // });
 
   $scope.remove = function (id) {
-    // remove chat with given id
-
+    ref.child('rooms').child(id).remove();
   }
   
   $scope.openChatRoom = function(roomId) {
