@@ -23,9 +23,12 @@
         <ion-item class="" ng-repeat="chat in chats | orderBy: sortMethod" type="item-text-wrap">  <h4>{{chat.from}}</h4>
           <span am-time-ago="chat.createdAt" class="item-note"></span>
           <p class="item-text-wrap chat-wrap">{{chat.message}}</p>
-          <ion-option-button class="button-assertive" ng-click="remove(chat)">
+          
+          <!-- Activate to enable removal of individual messages -->
+          <!-- <ion-option-button class="button-assertive" ng-click="remove(chat)">
             Press to Delete
-          </ion-option-button>
+          </ion-option-button> -->
+          
         </ion-item>
       </ion-list>
     </div>

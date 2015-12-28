@@ -3,7 +3,6 @@ angular.module('mychat.controllers', ['firebase'])
 .controller('LoginCtrl', function ($scope, $ionicModal, $state, $firebaseAuth, $ionicLoading, $rootScope) {
   console.log("Login Controller Initialized");
 
-  // var ref = new Firebase($scope.firebaseUrl);
   var auth = $firebaseAuth(ref);
 
   console.log("LOGGING showNavBar");
@@ -158,35 +157,39 @@ angular.module('mychat.controllers', ['firebase'])
 
 .controller('RoomsCtrl', function ($scope, Rooms, $state) {
   console.log("Rooms Controller Initialized");
-  // var ref = new Firebase($scope.firebaseUrl);
   $scope.rooms = Rooms.all();
 
   $scope.isFirstUser;
   
   $scope.gender = "Male";
   $scope.grade = "2016";
+
   //$scope.rooms.whichNameUid -- exists but not declared here
 
-
-  // Check for new chats
-  $scope.$on('$ionicView.enter', function (e) {
-    console.log("ENTERED ROOMS VIEW");
-    ref.child('users').child($scope.currentUserId).child('hasNewChatsInRooms')
-      .once('value', function (snapshot) {
+  // // Check for new chats
+  // $scope.$on('$ionicView.enter', function (e) {
+  //   console.log("ENTERED ROOMS VIEW");
+  //   ref.child('users').child($scope.currentUserId).child('hasNewChatsInRooms')
+  //     .once('value', function (snapshot) {
          
-        hasNewChatsInRooms = snapshot.val()
+  //       hasNewChatsInRooms = snapshot.val()
 
-        var hasNewChatsInRoomsArray = [];
+  //       var hasNewChatsInRoomsArray = [];
 
-        for (var key in hasNewChatsInRooms) {
-          // hasNewChatsInRoomsArray.push(hasNewChatsInRooms[key]);
-          hasNewChatsInRoomsArray.push(hasNewChatsInRooms[key]);
-        }
+  //       for (var key in hasNewChatsInRooms) {
+  //         // hasNewChatsInRoomsArray.push(hasNewChatsInRooms[key]);
+  //         hasNewChatsInRoomsArray.push(hasNewChatsInRooms[key]);
+  //       }
 
-        $scope.hasNewChatsInRoomsArray = hasNewChatsInRoomsArray;
+  //       $scope.hasNewChatsInRoomsArray = hasNewChatsInRoomsArray;
 
-      });
-  });
+  //     });
+  // });
+
+  $scope.remove = function (id) {
+    // remove chat with given id
+
+  }
   
   $scope.openChatRoom = function(roomId) {
     $state.go('tab.chat', {
@@ -199,40 +202,30 @@ angular.module('mychat.controllers', ['firebase'])
     ref.child('usersLookingToChat').once('value', function (snapshot) {
       usersLookingToChat = snapshot.val();
       var foundMatch = false;
+
       /* Loop through properties and check if any equal what we want in the form
       personlooking_gendergrade:lookingfor_gendergrade */
       for (var prop in usersLookingToChat) {
         if (usersLookingToChat.hasOwnProperty(prop)) {
           if (usersLookingToChat[prop]["type"] == "Male2018:Female2017") {
             console.log("gotcha: " + usersLookingToChat[prop]["id"]);
+
+            makeNewChat(
+              $scope.currentUserId,
+              $scope.displayname.displayname,
+              usersLookingToChat[prop]["id"],
+              usersLookingToChat[prop]["displayname"]
+              );
+
             foundMatch = true;
             break;
           }
         }
       }
+      
       if (!(foundMatch)) {
-        // else statement
-      }
-
-      if (usersLookingToChat != null && 
-          usersLookingToChat.hasOwnProperty(grade) && 
-          usersLookingToChat[grade].hasOwnProperty(gender) ) {
-        
-        makeNewChat(
-          $scope.currentUserId,
-          $scope.displayname.displayname,
-          usersLookingToChat[grade][gender]["id"],
-          usersLookingToChat[grade][gender]["displayname"]
-          );
-
-      }
-      else {
-        // ref.child('usersLookingToChat').child(grade).child(gender).set({
-        //   displayname: $scope.displayname.displayname,
-        //   id: $scope.currentUserId
-        // });
         ref.child('usersLookingToChat').push({
-          type: $scope.displayname.gender + $scope.displayname.grade + 
+          type: $scope.displayname.profile.gender + $scope.displayname.profile.grade + 
                 ":" + gender + grade,
           displayname: $scope.displayname.displayname,
           id: $scope.currentUserId
@@ -240,55 +233,6 @@ angular.module('mychat.controllers', ['firebase'])
       }
 
     });
-
-
-    // // Functional code with OpenToChat (now refactoring)
-    // ref.child('users').once('value', function (snapshot) {
-    //   var keepChecking = true;
-
-    //   // Create object of all items in hasChatsWith property
-    //   var hasChatsWith = snapshot.child($scope.currentUserId)
-    //     .child('hasChatsWith').val();
-
-    //   var hasChatsWithArray = [];
-    //   for (var key in hasChatsWith) {
-    //       hasChatsWithArray.push(hasChatsWith[key]);
-    //   }
-
-    //   console.log("Looking for chats");
-
-    //   snapshot.forEach(function (userOpenToChat) {
-    //     if (keepChecking) {
-
-    //       var userRefId = userOpenToChat.key();
-
-    //       if ( (userRefId != $scope.currentUserId) && 
-    //       (hasChatsWithArray.indexOf(userRefId) === -1) ) {
-
-    //         if (userOpenToChat.child('openToChat').val() &&
-    //             userOpenToChat.child('profile').child('gender') == gender &&
-    //             userOpenToChat.child('profile').child('grade') == grade
-    //             ) {  
-
-    //           var userRefName = userOpenToChat.child('displayname').val();
-              
-    //           makeNewChat($scope.currentUserId, $scope.displayname.displayname, userRefId, userRefName);
-            
-    //           // COMMENT OUT FOR DEVELOPMENT - UNCOMMENT LATER
-    //           ref.child('users').child(userRefId).child('openToChat').set(false);
-              
-    //           keepChecking = false;
-    //         }
-    //       }
-    //     }
-    //   });
-
-    //   if (keepChecking) {
-    //     console.log("Looking for chats");
-    //     alert("Waiting for someone else to connect...");
-    //     ref.child('users').child($scope.currentUserId).child('openToChat').set(true);
-    //   }
-    // });
   };
 
   var makeNewChat = function(uid1, u1Name, uid2, u2Name) {
