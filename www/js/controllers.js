@@ -122,6 +122,33 @@ angular.module('mychat.controllers', ['firebase'])
     $scope.chats = Chats.all();
   }
 
+  $ionicModal.fromTemplateUrl('templates/modalReport.html', {
+    scope: $scope
+  }).then(function(modalReport) {
+    $scope.modalReport = modalReport;
+  });
+
+  $scope.report = function(msg) {
+
+    ref.child('reports').push({
+      roomId: roomIdNumber, 
+      sender: $scope.displayname.displayname,
+      senderId: $scope.currentUserId,
+      senderEmail: $scope.displayname.email,
+      message: msg
+    });
+    
+    deleteRef.child('reports').push({
+      roomId: roomIdNumber, 
+      sender: $scope.displayname.displayname,
+      senderId: $scope.currentUserId,
+      senderEmail: $scope.displayname.email,
+      message: msg
+    });
+
+    $scope.modalReport.hide();
+  }
+
   // // Delete items from hasNewChatsInRooms when viewed
   // $scope.$on('$ionicView.enter', function (e) {
     
@@ -247,7 +274,6 @@ angular.module('mychat.controllers', ['firebase'])
       
       ref.child('rooms').child(newIdNumber).set({
         'id': newIdNumber,
-        //'name': 'Anonymous',
         'nameUid1': u2Name,
         'nameUid2': u1Name,
         'roomUid1': uid1,

@@ -1,0 +1,37 @@
+<ion-modal-view>
+	<ion-header-bar class="bar bar-header bar-energized">
+    <h1 class="title">Disclaimer</h1>
+    <button class="button button-clear button-primary" ng-click="modalReport.hide()">
+      Cancel
+    </button>
+  </ion-header-bar>
+
+  <ion-content class="padding">
+    <div class="card">
+
+      <div class="item item-text-wrap">
+        <p class="custom-style-p"><strong>
+          Report Chat
+        </strong></p>
+      </div>
+
+      <div class="item item-text-wrap">
+        <p class="custom-style-p">
+          Here at FStart, we take your concerns very seriously. Please briefly describe why you are reporting this chat:
+        </p>
+      </div>
+
+      <div class="item item-text-wrap">
+        <textarea placeholder="Comments" class="custom-style-p custom-textarea" ng-model="reportMessage">
+        </textarea>
+      </div>
+
+      <div class="item item-text-wrap">
+        <button class="button button-full button-energized" ng-click="report(reportMessage)">
+          Report Chat
+        </button>
+      </div>
+
+    </div>
+  </ion-content>
+</ion-modal-view>

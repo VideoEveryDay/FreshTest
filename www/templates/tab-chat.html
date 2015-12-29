@@ -21,7 +21,8 @@
           <h4> No current messages. Be the first to send one!</h4>
         </ion-item>
 
-        <ion-item class="" ng-repeat="chat in chats | orderBy: sortMethod" type="item-text-wrap">  <h4>{{chat.from}}</h4>
+        <ion-item ng-repeat="chat in chats" type="item-text-wrap">
+          <h4>{{chat.from}}</h4>
           <span am-time-ago="chat.createdAt" class="item-note"></span>
           <p class="item-text-wrap chat-wrap">{{chat.message}}</p>
           
@@ -29,6 +30,10 @@
           <!-- <ion-option-button class="button-assertive" ng-click="remove(chat)">
             Press to Delete
           </ion-option-button> -->
+
+          <ion-option-button class="button-energized" ng-click="modalReport.show()">
+            Report Chat
+          </ion-option-button>
 
         </ion-item>
       </ion-list>
