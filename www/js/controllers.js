@@ -122,18 +122,18 @@ angular.module('mychat.controllers', ['firebase'])
     $scope.chats = Chats.all();
   }
 
-  // Delete items from hasNewChatsInRooms when viewed
-  $scope.$on('$ionicView.enter', function (e) {
+  // // Delete items from hasNewChatsInRooms when viewed
+  // $scope.$on('$ionicView.enter', function (e) {
     
-    console.log("ENTERED CHAT VIEW");
+  //   console.log("ENTERED CHAT VIEW");
     
-    // Destroying the 'new' indicator
-    if (roomIdNumber) {
-      ref.child('users').child($scope.currentUserId).child('hasNewChatsInRooms')
-        .child(roomIdNumber).remove();
-    }
+  //   // Destroying the 'new' indicator
+  //   if (roomIdNumber) {
+  //     ref.child('users').child($scope.currentUserId).child('hasNewChatsInRooms')
+  //       .child(roomIdNumber).remove();
+  //   }
     
-  });
+  // });
 
   $scope.sendMessage = function(msg) {
     console.log("SCOPE");
@@ -141,13 +141,10 @@ angular.module('mychat.controllers', ['firebase'])
     Chats.send($scope.displayname, $state.params.roomId, msg);
     $scope.IM.textMessage = "";
 
-    // Add new message indicator to other user
-    var otherId = Chats.getOtherId($scope.currentUserId);
-    
-    console.log(typeof roomIdNumber);
-
-    ref.child('users').child(otherId).child('hasNewChatsInRooms')
-      .child(roomIdNumber).set(parseInt(roomIdNumber));
+    // // Add new message indicator to other user
+    // var otherId = Chats.getOtherId($scope.currentUserId);
+    // ref.child('users').child(otherId).child('hasNewChatsInRooms')
+    //   .child(roomIdNumber).set(parseInt(roomIdNumber));
   }
 
   $scope.remove = function(chat) {
@@ -280,25 +277,11 @@ angular.module('mychat.controllers', ['firebase'])
   });
 
 
-  $scope.updateProfile = function (gender) {
-    console.log("run updateProfile");
-    ref.child('users').child($scope.currentUserId).child('profile')
-      .child('gender').set(gender);
-  }
-
-  $scope.generateNewNumber = function() {
-    tempNumber = "310-"
-    for (var i = 0; i < 3; i++) {
-      tempNumber += Math.floor(Math.random() * 10);
-    }
-    tempNumber += "-";
-    for (var i = 0; i < 4; i++) {
-      tempNumber += Math.floor(Math.random() * 10);
-    }
-    $scope.number = tempNumber;
-  }
-
-  $scope.number = "";
+  // $scope.updateProfile = function (gender) {
+  //   console.log("run updateProfile");
+  //   ref.child('users').child($scope.currentUserId).child('profile')
+  //     .child('gender').set(gender);
+  // }
 
 });
 
