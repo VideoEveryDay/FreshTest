@@ -1,11 +1,9 @@
 angular.module('mychat.services', ['firebase'])
   .factory('Auth', ['$firebaseAuth', '$rootScope', function($firebaseAuth, $rootScope) {
-    // var ref = new Firebase(firebaseUrl);
     return $firebaseAuth(ref);
   }])
 
   .factory('Rooms', function($firebaseArray) {
-    // var ref = new Firebase(firebaseUrl)
     var rooms = $firebaseArray(ref.child('rooms'));
 
     return {
@@ -20,7 +18,6 @@ angular.module('mychat.services', ['firebase'])
 
   .factory('Chats', function($firebaseArray, Rooms) {
     var selectedRoomId;
-    // var ref = new Firebase(firebaseUrl);
     var chats;
 
     return {
