@@ -229,6 +229,10 @@ angular.module('mychat.controllers', ['firebase'])
   $scope.requestNewChat = function(gender, grade) {
 
     ref.child('usersLookingToChat').once('value', function (snapshot) {
+      myGender = $scope.displayname.profile.gender;
+      myGrade = $scope.displayname.profile.grade;
+      lookingFor = myGender + myGrade + ":" + gender + grade;
+
       usersLookingToChat = snapshot.val();
       var foundMatch = false;
 
@@ -236,7 +240,7 @@ angular.module('mychat.controllers', ['firebase'])
       personlooking_gendergrade:lookingfor_gendergrade */
       for (var prop in usersLookingToChat) {
         if (usersLookingToChat.hasOwnProperty(prop)) {
-          if (usersLookingToChat[prop]["type"] == "Male2018:Female2017") {
+          if (usersLookingToChat[prop]["type"] == lookingFor) {
 
             makeNewChat(
               $scope.currentUserId,
@@ -253,11 +257,11 @@ angular.module('mychat.controllers', ['firebase'])
       
       if (!(foundMatch)) {
         ref.child('usersLookingToChat').push({
-          type: $scope.displayname.profile.gender + $scope.displayname.profile.grade + 
-                ":" + gender + grade,
+          type: lookingFor,
           displayname: $scope.displayname.displayname,
           id: $scope.currentUserId
         });
+        alert("Waiting for a " + grade + " " + gender + " to connect.");
       }
 
     });
@@ -265,24 +269,20 @@ angular.module('mychat.controllers', ['firebase'])
 
   var makeNewChat = function(uid1, u1Name, uid2, u2Name) {
     var newIdNumber;
-    ref.child('rooms').once('value', function (snapshot) {
-      newIdNumber = snapshot.numChildren();
-      
-      while (snapshot.child(newIdNumber).exists()) {
-        newIdNumber++;
-      }
-      
-      ref.child('rooms').child(newIdNumber).set({
-        'id': newIdNumber,
-        'nameUid1': u2Name,
-        'nameUid2': u1Name,
-        'roomUid1': uid1,
-        'roomUid2': uid2
-      });
+
+    var newChatLocation = ref.child('rooms').push();
+    newChatLocation.set({
+      'id': newIdNumber,
+      'nameUid1': u1Name,
+      'nameUid2': u2Name,
+      'roomUid1': uid1,
+      'roomUid2': uid2
+    }, function() {
+      newChatLocation.child('id').set( newChatLocation.key() );
     });
   
-  ref.child('users').child(uid1).child('hasChatsWith').push(uid2);
-  ref.child('users').child(uid2).child('hasChatsWith').push(uid1);
+    ref.child('users').child(uid1).child('hasChatsWith').push(uid2);
+    ref.child('users').child(uid2).child('hasChatsWith').push(uid1);
   
   }
 })

@@ -21,7 +21,7 @@
           <h4> No current messages. Be the first to send one!</h4>
         </ion-item>
 
-        <ion-item ng-repeat="chat in chats" type="item-text-wrap">
+        <ion-item ng-repeat="chat in chats | orderBy: '-'" type="item-text-wrap">
           <h4>{{chat.from}}</h4>
           <span am-time-ago="chat.createdAt" class="item-note"></span>
           <p class="item-text-wrap chat-wrap">{{chat.message}}</p>

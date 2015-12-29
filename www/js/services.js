@@ -31,6 +31,7 @@ angular.module('mychat.services', ['firebase'])
       }, 
       get: function(chatId) {
         for (var i = 0; i < chats.length(); i++) {
+          // why parseInt? I think this is now broken but unused code
           if (chats[i].id === parseInt(chatId)) {
             return chats[i];
           }
@@ -73,10 +74,11 @@ angular.module('mychat.services', ['firebase'])
         }
         else {
           console.log("Selecting room with id " + roomId);
+          console.log(!isNaN(roomId))
           selectedRoomId = roomId;
-          if (!isNaN(roomId)) {
-            chats = $firebaseArray(ref.child('rooms').child(selectedRoomId).child('chats'));
-          }
+          // if (!isNaN(roomId)) { // Figure out why this was here
+          chats = $firebaseArray(ref.child('rooms').child(roomId).child('chats'));
+          // }
         }
       }, 
       send: function(from, chatId, message) {

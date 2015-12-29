@@ -6,6 +6,7 @@ Production Checklist
 
 - Move input item and change height to 60px
 
+- Notify other user when chat has been deleted
 
 
 Future Updates (or Production)
