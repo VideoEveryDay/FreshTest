@@ -3,6 +3,9 @@
 var firebaseUrl = "https://freshchat.firebaseio.com/"; //freshtest
 var ref = new Firebase(firebaseUrl);
 
+var deleteFirebaseUrl = "https://glaring-inferno-6223.firebaseio.com/"; // test only
+var deleteRef = new Firebase(deleteFirebaseUrl);
+
 function onDeviceReady() {
   angular.bootstrap(document, ["mychat"]);
 }

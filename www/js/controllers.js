@@ -187,7 +187,13 @@ angular.module('mychat.controllers', ['firebase'])
   // });
 
   $scope.remove = function (id) {
-    ref.child('rooms').child(id).remove();
+    // Before remove, save to backup Firebase
+    ref.child('rooms').child(id).once('value', function (snapshot) {
+      deleteRef.push(snapshot.val(), function() {
+        // Once save is complete, delete from regular Firebase
+        ref.child('rooms').child(id).remove();
+      });
+    });
   }
   
   $scope.openChatRoom = function(roomId) {
@@ -207,7 +213,6 @@ angular.module('mychat.controllers', ['firebase'])
       for (var prop in usersLookingToChat) {
         if (usersLookingToChat.hasOwnProperty(prop)) {
           if (usersLookingToChat[prop]["type"] == "Male2018:Female2017") {
-            console.log("gotcha: " + usersLookingToChat[prop]["id"]);
 
             makeNewChat(
               $scope.currentUserId,
