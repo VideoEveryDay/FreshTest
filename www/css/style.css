@@ -6,11 +6,6 @@
     width: 60%;
     margin: 0 auto;
 }
-/*.logoText {
-    text-align: center;
-    font-size: 28px;
-    font-family: cursive;
-}*/
 .logoText {
     text-align: center;
     font-size: 20px;
@@ -40,7 +35,7 @@
 }
 .custom-style-p.custom-style-p {
     font-size: 16px;
-    padding-left: 25px;
+    padding-left: 5px; /* old: 25px */
     margin-bottom: 10px;
 }
 .textRight {
@@ -84,3 +79,8 @@
     color: white;
     font-weight: bold;
 } 
+.custom-textarea {
+    resize: none;
+    width: 100%;
+    color: #666; 
+}
