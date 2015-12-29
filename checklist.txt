@@ -8,6 +8,7 @@ Production Checklist
 
 - Notify other user when chat has been deleted
 
+- Make sure you can’t post the same thing twice to usersLookingToChat
 
 Future Updates (or Production)
 

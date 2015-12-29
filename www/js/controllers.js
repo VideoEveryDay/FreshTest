@@ -185,8 +185,13 @@ angular.module('mychat.controllers', ['firebase'])
 
   $scope.isFirstUser;
   
+  // console.log($scope.displayname);
+
+  // $scope.gender = ($scope.displayname.profile.gender == "Male") ? "Female": "Male";
+  // $scope.grade = $scope.displayname.profile.grade;
+
+  $scope.grade = "2017";
   $scope.gender = "Male";
-  $scope.grade = "2016";
 
   //$scope.rooms.whichNameUid -- exists but not declared here
 
@@ -231,7 +236,6 @@ angular.module('mychat.controllers', ['firebase'])
     ref.child('usersLookingToChat').once('value', function (snapshot) {
       myGender = $scope.displayname.profile.gender;
       myGrade = $scope.displayname.profile.grade;
-      lookingFor = myGender + myGrade + ":" + gender + grade;
 
       usersLookingToChat = snapshot.val();
       var foundMatch = false;
@@ -240,7 +244,8 @@ angular.module('mychat.controllers', ['firebase'])
       personlooking_gendergrade:lookingfor_gendergrade */
       for (var prop in usersLookingToChat) {
         if (usersLookingToChat.hasOwnProperty(prop)) {
-          if (usersLookingToChat[prop]["type"] == lookingFor) {
+          if (usersLookingToChat[prop]["type"] == 
+              gender + grade + ":" + myGender + myGrade) {  
 
             makeNewChat(
               $scope.currentUserId,
@@ -257,7 +262,7 @@ angular.module('mychat.controllers', ['firebase'])
       
       if (!(foundMatch)) {
         ref.child('usersLookingToChat').push({
-          type: lookingFor,
+          type: myGender + myGrade + ":" + gender + grade,
           displayname: $scope.displayname.displayname,
           id: $scope.currentUserId
         });
@@ -272,7 +277,6 @@ angular.module('mychat.controllers', ['firebase'])
 
     var newChatLocation = ref.child('rooms').push();
     newChatLocation.set({
-      'id': newIdNumber,
       'nameUid1': u1Name,
       'nameUid2': u2Name,
       'roomUid1': uid1,
@@ -285,6 +289,7 @@ angular.module('mychat.controllers', ['firebase'])
     ref.child('users').child(uid2).child('hasChatsWith').push(uid1);
   
   }
+  
 })
 
 .controller('AccountCtrl', function ($scope, $ionicModal) {
