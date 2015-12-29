@@ -236,16 +236,19 @@ angular.module('mychat.controllers', ['firebase'])
     ref.child('usersLookingToChat').once('value', function (snapshot) {
       myGender = $scope.displayname.profile.gender;
       myGrade = $scope.displayname.profile.grade;
+      lookingForOtherType = myGender + myGrade + ":" + gender + grade;
+      lookingForMeType = gender + grade + ":" + myGender + myGrade;
 
       usersLookingToChat = snapshot.val();
       var foundMatch = false;
 
       /* Loop through properties and check if any equal what we want in the form
       personlooking_gendergrade:lookingfor_gendergrade */
+
       for (var prop in usersLookingToChat) {
         if (usersLookingToChat.hasOwnProperty(prop)) {
-          if (usersLookingToChat[prop]["type"] == 
-              gender + grade + ":" + myGender + myGrade) {  
+          // Check if good match
+          if (usersLookingToChat[prop]["type"] == lookingForMeType) {  
 
             makeNewChat(
               $scope.currentUserId,
@@ -257,12 +260,18 @@ angular.module('mychat.controllers', ['firebase'])
             foundMatch = true;
             break;
           }
+          // If dulpicate request, end loop and do nothing          
+          else if (usersLookingToChat[prop]["id"] == $scope.currentUserId &&
+                   usersLookingToChat[prop]["type"] == lookingForOtherType) {
+            foundMatch = true;
+            break;
+          }
         }
       }
       
       if (!(foundMatch)) {
         ref.child('usersLookingToChat').push({
-          type: myGender + myGrade + ":" + gender + grade,
+          type: lookingForOtherType,
           displayname: $scope.displayname.displayname,
           id: $scope.currentUserId
         });
