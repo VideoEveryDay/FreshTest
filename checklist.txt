@@ -4,7 +4,7 @@ Production Checklist
 
 - Automatic Password Login with localStorage
 
-- 
+- Move input item and change height to 60px
 
 
 
