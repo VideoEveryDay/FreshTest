@@ -8,7 +8,7 @@
           <label class="item-input-wrapper">
             <input type="text" ng-model="IM.textMessage" placeholder="Type in your message...">
           </label>
-          <button ng-click="sendMessage(IM.textMessage)" class="button button-small button-balanced">
+          <button ng-click="sendMessage(IM.textMessage)" class="button button-small button-balanced" ng-disabled="deletedById">
             Send
           </button>
         </ion-item>
@@ -21,21 +21,28 @@
           <h4> No current messages. Be the first to send one!</h4>
         </ion-item>
 
-        <ion-item ng-repeat="chat in chats" type="item-text-wrap">
+        <ion-item ng-show="deletedById">
+          <button ng-hide="deletedById === currentUserId" class="button button-full button-assertive">
+            Permanently Delete Chat
+          </button>
+          <p ng-show="deletedById === currentUserId" class="item-text-wrap chat-wrap">
+            Waiting for partner to end the chat.
+          </p>
+        </ion-item>
+
+        <ion-item ng-repeat="chat in chats | orderBy: '-'" type="item-text-wrap">
           <h4>{{chat.from}}</h4>
           <span am-time-ago="chat.createdAt" class="item-note"></span>
           <p class="item-text-wrap chat-wrap">{{chat.message}}</p>
-          
           <!-- Activate to enable removal of individual messages -->
           <!-- <ion-option-button class="button-assertive" ng-click="remove(chat)">
             Press to Delete
           </ion-option-button> -->
-
           <ion-option-button class="button-energized" ng-click="modalReport.show()">
             Report Chat
           </ion-option-button>
-
         </ion-item>
+
       </ion-list>
     </div>
 
