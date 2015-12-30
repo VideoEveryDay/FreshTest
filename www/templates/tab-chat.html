@@ -22,7 +22,7 @@
         </ion-item>
 
         <ion-item ng-show="deletedById">
-          <button ng-hide="deletedById === currentUserId" class="button button-full button-assertive">
+          <button ng-hide="deletedById === currentUserId" ng-click="confirmRemove()" class="button button-full button-assertive">
             Permanently Delete Chat
           </button>
           <p ng-show="deletedById === currentUserId" class="item-text-wrap chat-wrap">
