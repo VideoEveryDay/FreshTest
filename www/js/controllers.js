@@ -120,7 +120,25 @@ angular.module('mychat.controllers', ['firebase'])
   if (roomName) {
     $scope.roomName = " - " + roomName;
     $scope.chats = Chats.all();
+
+    ref.child('rooms').child(roomIdNumber).child('chats').once('value', function (snapshot) {
+      chats = snapshot.val();
+      for (var key in chats) {
+        if (key == 'deleted') {
+          $scope.deletedById = chats[key]['deletedById'];
+        }
+      }
+    });
   }
+
+  // ref.child('rooms').child(roomIdNumber).child('chats').on('value', function (snapshot) {
+  //   $scope.chats = snapshot.val();
+  //   // for (var key in $scope.) {
+  //   //   if ()
+  //   // }
+  // });
+
+  
 
   $ionicModal.fromTemplateUrl('templates/modalReport.html', {
     scope: $scope
@@ -174,9 +192,9 @@ angular.module('mychat.controllers', ['firebase'])
     //   .child(roomIdNumber).set(parseInt(roomIdNumber));
   }
 
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  }
+  // $scope.remove = function(chat) {
+  //   Chats.remove(chat);
+  // }
 })
 
 .controller('RoomsCtrl', function ($scope, Rooms, $state) {
@@ -215,7 +233,31 @@ angular.module('mychat.controllers', ['firebase'])
   //     });
   // });
 
-  $scope.remove = function (id) {
+  /* Need to change this so that it doesn't ztcually delete but instead sends a
+  special message requesting that the chat be deleted with a button that allows
+  the other user to actually delete the chat. It should make deleted (child of 
+  chat id) true. */
+  
+  $scope.askToRemove = function (id) {
+    ref.child('rooms').child(id).child('chats').once('value', function (snapshot) {
+      if (snapshot.child('deleted').exists() && 
+          snapshot.child('deleted') != $scope.currentUserId) {
+        $scope.confirmRemove(id);
+      }
+      else { 
+        ref.child('rooms').child(id).child('chats').child('deleted').set({
+          deletedById: $scope.currentUserId,
+          from: "End of Chat",
+          message: $scope.displayname.displayname + " has deleted this message."
+        }, function(error) {
+          if (error) { console.log(error); }
+          else { alert("Deletion pending."); }
+        });
+      }
+    });
+  }
+
+  $scope.confirmRemove = function (id) {
     // Before remove, save to backup Firebase
     ref.child('rooms').child(id).once('value', function (snapshot) {
       deleteRef.push(snapshot.val(), function() {
@@ -286,8 +328,8 @@ angular.module('mychat.controllers', ['firebase'])
 
     var newChatLocation = ref.child('rooms').push();
     newChatLocation.set({
-      'nameUid1': u1Name,
-      'nameUid2': u2Name,
+      'nameUid1': u2Name,
+      'nameUid2': u1Name,
       'roomUid1': uid1,
       'roomUid2': uid2
     }, function() {
