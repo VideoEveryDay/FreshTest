@@ -3,18 +3,18 @@ angular.module('mychat.services', ['firebase'])
     return $firebaseAuth(ref);
   }])
 
-  .factory('Rooms', function($firebaseArray) {
-    var rooms = $firebaseArray(ref.child('rooms'));
+  // .factory('Rooms', function($firebaseArray) {
+  //   var rooms = $firebaseArray(ref.child('rooms'));
 
-    return {
-      all: function() {
-        return rooms;
-      },
-      get: function(roomId) {
-        return rooms.$getRecord(roomId);
-      }
-    }
-  })
+  //   return {
+  //     all: function() {
+  //       return rooms;
+  //     },
+  //     get: function(roomId) {
+  //       return rooms.$getRecord(roomId);
+  //     }
+  //   }
+  // })
 
   // .factory('Chats', function($firebaseArray, Rooms) {
   //   var selectedRoomId;

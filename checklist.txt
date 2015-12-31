@@ -1,3 +1,16 @@
+PROBLEMS
+
+- rooms list doesn’t update in realtime
+
+- if you go to a chat room before selecting a room, you get something weird with delete options and ‘loading chats’
+
+- chats do not update in real time
+
+- chats only refresh on <strong>interaction</strong>
+
+- you can add multiple chats with the same person (‘hasChatsWith’ does nothing)
+
+
 Production Checklist
 
 - Google Analytics: https://blog.nraboy.com/2014/06/using-google-analytics-ionicframework/

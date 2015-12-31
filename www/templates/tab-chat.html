@@ -1,6 +1,10 @@
-<ion-view view-title="Chat Room {{roomName}}">
-  <ion-content>
+<ion-view view-title="{{roomName}}">
+  
+  <ion-nav-buttons side="left">
+   <button class="button button-clear" ng-click="back()"><i class="icon ion-arrow-left-c custom-smaller-icon"></i> People</button>
+  </ion-nav-buttons>
 
+  <ion-content>
     <div ng-show="roomName">
       <ion-list>
         <!-- Move this input item below -->
