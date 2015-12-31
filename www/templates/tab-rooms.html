@@ -61,9 +61,15 @@
         </h2>
       </ion-item>
     </ion-list>
-    <ion-list ng-hide="rooms.length">
+    <ion-list ng-hide="rooms">
       <ion-item class="textCenter">
-        <i class="icon ion-loading-c"></i> Loading Rooms
+        <span ng-show="rooms === null">
+          <i class="icon ion-loading-c"></i>Look for Someone New!
+          <!-- Replace with user onboard diagram -->
+        </span>
+        <span ng-show="rooms === {}">
+          <i class="icon ion-loading-c"></i> Loading Rooms
+        </span>
       </ion-item>
     </ion-list>
 

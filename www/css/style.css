@@ -84,3 +84,6 @@
     width: 100%;
     color: #666; 
 }
+.button.custom-smaller-icon.icon:before {
+    font-size: 22px;
+}

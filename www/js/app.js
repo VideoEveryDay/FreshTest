@@ -36,7 +36,7 @@ angular.module('mychat', ['ionic', 'firebase', 'angularMoment', 'mychat.controll
     To get displayname, use displayname.displayname
     */
     $rootScope.firebaseUrl = firebaseUrl;
-    $rootScope.displayname = null; 
+    $rootScope.displayname = null;
 
     Auth.$onAuth(function(authData) {
       if (authData) {
