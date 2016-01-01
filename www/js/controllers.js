@@ -105,7 +105,7 @@ angular.module('mychat.controllers', ['firebase'])
 
   // Chats
   console.log("Chat Controller Initialized");
-  $scope.chats = new Array;
+  $scope.chats;
   $scope.deletedById;
   var selectedRoomId, roomName;
 
@@ -131,13 +131,16 @@ angular.module('mychat.controllers', ['firebase'])
   // Could be refactored with 'child_added' but this should work for now
   ref.child('rooms').child(roomIdNumber).child('chats').on('value', function (snapshot) {
     // use $timeout to actually update DOM when Firebase changes
+    var chats = snapshot.val();
     $timeout(function() {
-      $scope.chats = snapshot.val();
+      $scope.chats = chats;
     });
     
-    for (var key in $scope.chats) {
+    for (var key in chats) {
       if (key === 'deleted') {
-        $scope.deletedById = $scope.chats['deleted']['deletedById']; 
+        $timeout(function() {
+          $scope.deletedById = chats['deleted']['deletedById']; 
+        });
       }
     }
 
@@ -202,7 +205,6 @@ angular.module('mychat.controllers', ['firebase'])
   }
 
   $scope.confirmRemove = function() {
-    console.log("confirmRemove()");
     // Before remove, save to backup Firebase
     ref.child('rooms').child(roomIdNumber).once('value', function (snapshot) {
       deleteRef.push(snapshot.val(), function() {
@@ -311,6 +313,8 @@ angular.module('mychat.controllers', ['firebase'])
       deleteRef.push(snapshot.val(), function() {
         // Once save is complete, delete from regular Firebase
         ref.child('rooms').child(id).remove();
+        ref.child('users').child(currentUserId).child('hasChatsWith').child(roomIdNumber
+          ).remove();
       });
     });
   }
