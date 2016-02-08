@@ -69,9 +69,6 @@
     background: linear-gradient(135deg, #388DF5 0%,#94E4AC 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     
 }
-.custom-no-box-shadow {
-    box-shadow: none;
-}
 .custom-white-text {
     color: white;
 }
@@ -87,3 +84,48 @@
 .button.custom-smaller-icon.icon:before {
     font-size: 22px;
 }
+
+/* Login */
+.custom-login {
+    background: transparent;
+    padding-top: 20px;
+    box-shadow: none;
+}
+.custom-login .item {
+    padding-top: 20px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #F2F2F2;
+}
+.custom-login .input-label, .custom-login input {
+    color: white;
+    font-size: 14px;
+}
+.custom-login .item-select select {
+    background: transparent;
+    color: white;
+}
+.custom-login .item-select:after {
+    color: #F2F2F2;
+}
+.custom-login .button.button-full {
+    background: white;
+    color: #4498EB;
+    font-weight: bold;
+    border: none;
+    border-radius: 100px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 50px;
+}
+.custom-login-header-bar {
+    background: #479BE9;
+}
+.custom-login-header-bar h1, .custom-login-header-bar .button {
+    color: #F2F2F2;
+}
+
+
+
+
+

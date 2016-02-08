@@ -55,6 +55,7 @@ angular.module('mychat', ['ionic', 'firebase', 'angularMoment', 'mychat.controll
         template: "Logging out..."
       });
       Auth.$unauth();
+      localStorage.clear();
     }
 
     $rootScope.$on("$stateChangeError", function (event, toState, toParams, fromState, fromParams, error) {

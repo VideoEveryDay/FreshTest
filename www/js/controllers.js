@@ -8,7 +8,6 @@ angular.module('mychat.controllers', ['firebase'])
   console.log("LOGGING showNavBar");
   showNavBar = true;
 
-
   $ionicModal.fromTemplateUrl('templates/loginModal.html', {
     scope: $scope
   }).then(function(modal) {
@@ -78,6 +77,10 @@ angular.module('mychat.controllers', ['firebase'])
             $rootScope.displayname = val;
           });
         });
+        //local storage store password
+        localStorage['username'] = user.email;
+        localStorage['password'] = user.pwdForLogin;
+        // end localStorage stuff
         $ionicLoading.hide();
         $scope.modal.hide();
         $state.go('tab.rooms');
@@ -90,6 +93,15 @@ angular.module('mychat.controllers', ['firebase'])
       alert("Something went wrong! Please enter a valid email and password");
     }
   }
+
+  // If password saved, log user in // ENABLE FOR PRODUCTION
+  // if (localStorage.getItem("username") && localStorage.getItem("password")) {
+  //   $scope.signIn({
+  //     email: localStorage.getItem("username"),
+  //     pwdForLogin: localStorage.getItem("password")
+  //   });
+  // }
+
 })
 
 .controller('ChatCtrl', function ($scope, $state, $timeout, $ionicModal) {
@@ -105,7 +117,7 @@ angular.module('mychat.controllers', ['firebase'])
 
   // Chats
   console.log("Chat Controller Initialized");
-  $scope.chats = new Array;
+  $scope.chats;
   $scope.deletedById;
   var selectedRoomId, roomName;
 
@@ -131,13 +143,16 @@ angular.module('mychat.controllers', ['firebase'])
   // Could be refactored with 'child_added' but this should work for now
   ref.child('rooms').child(roomIdNumber).child('chats').on('value', function (snapshot) {
     // use $timeout to actually update DOM when Firebase changes
+    var chats = snapshot.val();
     $timeout(function() {
-      $scope.chats = snapshot.val();
+      $scope.chats = chats;
     });
     
-    for (var key in $scope.chats) {
+    for (var key in chats) {
       if (key === 'deleted') {
-        $scope.deletedById = $scope.chats['deleted']['deletedById']; 
+        $timeout(function() {
+          $scope.deletedById = chats['deleted']['deletedById']; 
+        });
       }
     }
 
@@ -201,16 +216,24 @@ angular.module('mychat.controllers', ['firebase'])
     }
   }
 
-  $scope.confirmRemove = function() {
-    console.log("confirmRemove()");
+  $scope.confirmRemove = function(id) {
     // Before remove, save to backup Firebase
-    ref.child('rooms').child(roomIdNumber).once('value', function (snapshot) {
+    ref.child('rooms').child(id).once('value', function (snapshot) {
       deleteRef.push(snapshot.val(), function() {
         // Once save is complete, delete from regular Firebase
-        $state.go('tab.rooms');
-        ref.child('rooms').child(roomIdNumber).remove();
-        ref.child('users').child(currentUserId).child('hasChatsWith').child(roomIdNumber
-          ).remove();
+        ref.child('rooms').child(id).remove();
+        // Find out other user id
+        var myUid = $scope.currentUserId
+        var otherUserUid;
+        ref.child('users').child(myUid).child(hasChatsWith).child(
+          id).child('uid').once('value', function (snapshot) {
+            otherUserUid = snapshot.val();
+          });
+        // Delete from hasChatsWith on both accounts
+        ref.child('users').child(myUid).child('hasChatsWith').child(
+          roomIdNumber).remove();
+        ref.child('users').child(otherUserUid).child('hasChatsWith').child(
+          roomIdNumber).remove();
       });
     });
   }
@@ -223,42 +246,57 @@ angular.module('mychat.controllers', ['firebase'])
 
 .controller('RoomsCtrl', function ($scope, $state, $timeout) {
   console.log("Rooms Controller Initialized");
-  $scope.rooms = null;
-  $scope.isFirstUser;
-  var roomsArray = [];
+  $scope.rooms = new Array;
+  hasChatsWithIdArray = new Array;
+  // $scope.isFirstUser;
 
-  // Get rooms
-  if ($scope.currentUserId) {
-    // First figure out which nodes to check
-    ref.child('users').child($scope.currentUserId).child('hasChatsWith').once('value', 
-      function (snapshot) {
-        hasChatsWith = snapshot.val();
-        for (var key in hasChatsWith) {
-          roomsArray.push(key);
-        }
+  // // Get rooms
+  // if ($scope.currentUserId) {
+  //   // First figure out which nodes to check
+  //   ref.child('users').child($scope.currentUserId).child('hasChatsWith').once('value', 
+  //     function (snapshot) {
+  //       hasChatsWith = snapshot.val();
+  //       for (var key in hasChatsWith) {
+  //         roomsArray.push(key);
+  //       }
+  //     });
+  // }
+  // else { console.log("Error getting currentUserId"); }
+
+  if ($scope.currentUserId) { console.log("currentUserId is defined!"); }
+  else { console.log("currentUserId is NOT defined!"); }
+
+  ref.child('users').child($scope.currentUserId).child('hasChatsWith').on('value',
+    function (snapshot) {
+      roomsArray = [];
+      hasChatsWith = snapshot.val();
+      for (var key in hasChatsWith) {
+        // First add id to array of ids for later use checking duplicates
+        hasChatsWithIdArray.push(hasChatsWith[key]['uid']);
+
+        // Then push object to array of rooms to display all rooms
+        roomsArray.push({
+          'id': key,
+          'uid': hasChatsWith[key]['uid'],
+          'name': hasChatsWith[key]['name']
+        });
+      }
+      // Then update the scope with $timeout
+      $timeout(function() {
+        $scope.rooms = roomsArray;
       });
-  }
-  else { console.log("Error getting currentUserId"); }
-
-  // Then get those rooms and place them into the array
-  ref.child('rooms').on('value', function (snapshot) {
-    // use $timeout to update DOM on Firebase change
-    $timeout(function() {
-      $scope.rooms = snapshot.val();
     });
-  });
 
-  // $scope.rooms = Rooms.all();
-  
-  // console.log($scope.displayname);
+  // // Then get those rooms and place them into the array
+  // ref.child('rooms').on('value', function (snapshot) {
+  //   // use $timeout to update DOM on Firebase change
+  //   $timeout(function() {
+  //     $scope.rooms = snapshot.val();
+  //   });
+  // });
 
-  // $scope.gender = ($scope.displayname.profile.gender == "Male") ? "Female": "Male";
-  // $scope.grade = $scope.displayname.profile.grade;
-
-  $scope.grade = "2017";
-  $scope.gender = "Male";
-
-  //$scope.rooms.whichNameUid -- exists but not declared here
+  $scope.grade = "2017"; // change based on displayname.profile.gender
+  $scope.gender = "Male"; // equal to displayname.profile.grade
 
   // // Check for new chats
   // $scope.$on('$ionicView.enter', function (e) {
@@ -305,12 +343,23 @@ angular.module('mychat.controllers', ['firebase'])
     });
   }
 
+  // I should set up a factory for this function
   $scope.confirmRemove = function (id) {
     // Before remove, save to backup Firebase
     ref.child('rooms').child(id).once('value', function (snapshot) {
       deleteRef.push(snapshot.val(), function() {
         // Once save is complete, delete from regular Firebase
         ref.child('rooms').child(id).remove();
+        // Find out other user id
+        var myUid = $scope.currentUserId;
+        var otherUserUid;
+        ref.child('users').child(myUid).child('hasChatsWith').child(
+          id).child('uid').once('value', function (snapshot) {
+            otherUserUid = snapshot.val();
+          });
+        // Delete from hasChatsWith on both accounts
+        ref.child('users').child(myUid).child('hasChatsWith').child(id).remove();
+        ref.child('users').child(otherUserUid).child('hasChatsWith').child(id).remove();
       });
     });
   }
@@ -323,16 +372,18 @@ angular.module('mychat.controllers', ['firebase'])
 
   $scope.requestNewChat = function(gender, grade) {
 
-    hasChatsWithArray = []
-    ref.child('users').child($scope.currentUserId).child('hasChatsWith')
-      .once('value', function (snapshot) {
-        hasChatsWithObject = snapshot.val();
-        for (var key in hasChatsWithObject) {
-          hasChatsWithArray.push(hasChatsWithObject[key]);
-        }
-    });
-    console.log("hasChatsWithArray:");
-    console.log(hasChatsWithArray);
+    // Still need to implement no duplicate chats
+    // should be able to use hasChatsWithIdArray
+    // hasChatsWithArray = []
+    // ref.child('users').child($scope.currentUserId).child('hasChatsWith')
+    //   .child('uid').once('value', function (snapshot) {
+    //     hasChatsWithObject = snapshot.val();
+    //     for (var key in hasChatsWithObject) {
+    //       hasChatsWithArray.push(hasChatsWithObject[key]);
+    //     }
+    // });
+    // console.log("hasChatsWithArray:");
+    // console.log(hasChatsWithArray);
 
     ref.child('usersLookingToChat').once('value', function (snapshot) {
       myGender = $scope.displayname.profile.gender;
@@ -342,10 +393,6 @@ angular.module('mychat.controllers', ['firebase'])
 
       usersLookingToChat = snapshot.val();
       var foundMatch;
-
-      /* Loop through properties and check if any equal what we want in the form
-      personlooking_gendergrade:lookingfor_gendergrade */
-
 
       for (var prop in usersLookingToChat) {
         // Match found in Firebase
@@ -398,9 +445,15 @@ angular.module('mychat.controllers', ['firebase'])
         newChatLocation.child('id').set(newChatLocationId);
 
         ref.child('users').child(uid1).child('hasChatsWith').child(
-          newChatLocationId).set(uid2);
+          newChatLocationId).set({
+            'uid': uid2,
+            'name': u2Name
+          });
         ref.child('users').child(uid2).child('hasChatsWith').child(
-          newChatLocationId).set(uid1);
+          newChatLocationId).set({
+            'uid': uid1,
+            'name': u1Name
+          });
       }
     });
   }
