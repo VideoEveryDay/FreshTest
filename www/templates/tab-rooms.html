@@ -37,29 +37,33 @@
     </div>
     
     <ion-list ng-show="rooms">
+      <!-- Experimental -->
+      <ion-item class="item-icon-left" ng-repeat="room in rooms" type="item-text-wrap" ng-click="openChatRoom(room.id)">
+        <h2>
+          <span>{{room.name}}</span>
+          <ion-option-button class="button-assertive" ng-click="askToRemove(room.id)">
+            Press to Delete
+          </ion-option-button>
+        </h2>
+      </ion-item>
+
       <!-- This section needs to be refactored -->
-      <ion-item class="item-icon-left" ng-repeat="room in rooms | orderBy: sortMethod" type="item-text-wrap" ng-if="currentUserId === room.roomUid1 || currentUserId === room.roomUid2" ng-click="openChatRoom(room.id)">
+      <!-- <ion-item class="item-icon-left" ng-repeat="room in rooms | orderBy: sortMethod" type="item-text-wrap" ng-if="currentUserId === room.roomUid1 || currentUserId === room.roomUid2" ng-click="openChatRoom(room.id)">
         <h2>
           <span ng-init="isFirstUser = (room.roomUid1 === currentUserId)"></span>
           <span ng-init="room.whichNameUid = (isFirstUser) ? room.nameUid1 : room.nameUid2"></span>
           <span ng-init="room.random = random()"></span>
-          <!-- <span>
-            {{room.whichNameUid}}
-          </span> -->
           <span ng-if="isFirstUser">
             {{room.nameUid1}}
           </span>
           <span ng-if="!(isFirstUser)">
             {{room.nameUid2}}
           </span>
-          <!-- <span class="customFloatRight" ng-if="hasNewChatsInRoomsArray.indexOf(room.id) != -1">new</span> -->
-          
           <ion-option-button class="button-assertive" ng-click="askToRemove(room.id)">
             Press to Delete
           </ion-option-button>
-
         </h2>
-      </ion-item>
+      </ion-item> -->
     </ion-list>
     <ion-list ng-hide="rooms">
       <ion-item class="textCenter">

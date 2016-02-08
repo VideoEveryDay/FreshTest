@@ -1,13 +1,13 @@
 <ion-modal-view>
-	<ion-header-bar class="bar bar-header bar-positive">
-    <h1 class="title">Create New Account</h1>
+	<ion-header-bar class="bar bar-header custom-login-header-bar">
+    <h1 class="title">Log In</h1>
     <button class="button button-clear button-primary" ng-click="modal.hide()">
       Cancel
     </button>
   </ion-header-bar>
 
-  <ion-content class="padding">
-    <div class="list">
+  <ion-content class="padding custom-gradient-bg">
+    <div class="list custom-login">
       
       <label class="item item-input">
         <span class="input-label">Email</span>
@@ -17,7 +17,7 @@
         <span class="input-label">Password</span>
         <input type="password" ng-model="user.pwdForLogin">
       </label>
-      <button ng-click="signIn(user)" class="button button-block button-positive activated">
+      <button ng-click="signIn(user)" class="button button-full button-positive activated">
         Sign In
       </button>
 
