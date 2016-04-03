@@ -59,6 +59,9 @@
 .custom-margin-auto {
     margin: auto;
 }
+.custom-small-margin-top {
+    margin-top: 5px;
+}
 
 /* Custom Gradient */
 .custom-gradient-bg {
@@ -124,6 +127,33 @@
 .custom-login-header-bar h1, .custom-login-header-bar .button {
     color: #F2F2F2;
 }
+.custom-login .custom-radio .item-content {
+    background: transparent;
+    text-align: center;
+    padding: 10px 49px 10px 10px;
+    font-size: 13px;
+}
+.custom-login .custom-radio {
+    color: white;
+    border-bottom: none;
+    padding: 0px;
+    margin: 3px;
+    float: left;
+}
+.custom-login .custom-radio i.radio-icon {
+    padding: 0px;
+    padding-right: 14px;
+} 
+/* Workaround: this should work with input:checked but does not,
+so here we are using input.valid-parse */
+.custom-login .custom-radio input.ng-valid-parse + .radio-content .item-content {
+    background: rgba(255,255,255,0.3);
+}
+.item-radio input.ng-valid-parse + .radio-content .radio-icon {
+    visibility: visible;
+}
+
+
 
 
 

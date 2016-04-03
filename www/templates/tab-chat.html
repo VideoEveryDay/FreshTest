@@ -26,15 +26,15 @@
         </ion-item>
 
         <ion-item ng-show="deletedById">
-          <button ng-hide="deletedById === currentUserId" ng-click="confirmRemove()" class="button button-full button-assertive">
-            Permanently Delete Chat
-          </button>
+          <p ng-hide="deletedById === currentUserId" class="item-text-wrap chat-wrap">
+            Your partner has ended the chat. You may still read messages or report the chat. To delete this chat, return to the <strong>People</strong> page and swipe left on the chat. 
+          </p>
           <p ng-show="deletedById === currentUserId" class="item-text-wrap chat-wrap">
             Waiting for partner to end the chat.
           </p>
         </ion-item>
 
-        <ion-item ng-repeat="chat in chats | orderBy: '-'" type="item-text-wrap">
+        <ion-item ng-repeat="chat in chats | orderBy: '' : true" type="item-text-wrap">
           <h4>{{chat.from}}</h4>
           <span am-time-ago="chat.createdAt" class="item-note"></span>
           <p class="item-text-wrap chat-wrap">{{chat.message}}</p>

@@ -2,37 +2,30 @@
   
   
   <ion-content class="padding custom-gradient-bg">
-    <div class="list">
-      <!-- <img src="img/Logo_PNG.png" class="logo"> -->
-      <br />
-      <!-- <div class="logoText">
-        Create an Account
-      </div> -->
-    </div>
 
     <!-- If remove cutom gradient, remove custom-no-box-shadow to this element -->
     <div class="list card padding custom-login">
 
-      <label class="item item-input item-select">
+      <label class="item item-input">
           <div class="input-label">
             Gender
           </div>
-          <select ng-model="user.gender">
-            <option>Male</option>
-            <option>Female</option>
-            <option>Unspecified</option>
-          </select>
+          <ion-list>
+            <ion-radio ng-model="user.gender" ng-value="'Male'" class="custom-radio">Male</ion-radio>
+            <ion-radio ng-model="user.gender" ng-value="'Female'" class="custom-radio">Female</ion-radio>
+            <ion-radio ng-model="user.gender" ng-value="'Unspecified'" class="custom-radio">Unspecified</ion-radio>
+          </ion-list>
         </label>
-        <label class="item item-input item-select">
+        <label class="item item-input">
           <div class="input-label">
             Grade
           </div>
-          <select ng-model="user.grade">
-            <option>2016</option>
-            <option>2017</option>
-            <option>2018</option>
-            <option>2019</option>
-          </select>
+          <ion-list>
+            <ion-radio ng-model="user.grade" ng-value="'2016'" class="custom-radio">2016</ion-radio>
+            <ion-radio ng-model="user.grade" ng-value="'2017'" class="custom-radio">2017</ion-radio>
+            <ion-radio ng-model="user.grade" ng-value="'2018'" class="custom-radio">2018</ion-radio>
+            <ion-radio ng-model="user.grade" ng-value="'2019'" class="custom-radio">2019</ion-radio>
+          </ion-list>
         </label>
       <label class="item item-input">
         <span class="input-label">Email Address</span>
@@ -45,12 +38,9 @@
       <button class="button button-full button-positive" ng-click="createUser(user)">
         Create New Account
       </button>
-
-
     </div>
-    
-    <br />
-    <div class="list textCenter custom-white-text">
+
+    <div class="list textCenter custom-white-text custom-signin-text">
       Already have an account? <a ng-click="modal.show()" class="positive custom-underline"> Sign in</a>
     </div>
     

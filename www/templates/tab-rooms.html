@@ -41,6 +41,7 @@
       <ion-item class="item-icon-left" ng-repeat="room in rooms" type="item-text-wrap" ng-click="openChatRoom(room.id)">
         <h2>
           <span>{{room.name}}</span>
+          <p class="custom-small-margin-top">{{room.lastMessage}}</p>
           <ion-option-button class="button-assertive" ng-click="askToRemove(room.id)">
             Press to Delete
           </ion-option-button>

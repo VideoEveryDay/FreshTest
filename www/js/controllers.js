@@ -94,13 +94,13 @@ angular.module('mychat.controllers', ['firebase'])
     }
   }
 
-  // If password saved, log user in // ENABLE FOR PRODUCTION
-  // if (localStorage.getItem("username") && localStorage.getItem("password")) {
-  //   $scope.signIn({
-  //     email: localStorage.getItem("username"),
-  //     pwdForLogin: localStorage.getItem("password")
-  //   });
-  // }
+  // // If password saved, log user in // ENABLE FOR PRODUCTION
+  if (localStorage.getItem("username") && localStorage.getItem("password")) {
+    $scope.signIn({
+      email: localStorage.getItem("username"),
+      pwdForLogin: localStorage.getItem("password")
+    });
+  }
 
 })
 
@@ -119,45 +119,58 @@ angular.module('mychat.controllers', ['firebase'])
   console.log("Chat Controller Initialized");
   $scope.chats;
   $scope.deletedById;
-  var selectedRoomId, roomName;
-
-  roomIdNumber = $state.params.roomId;
-
-  $scope.IM = {
-    textMessage: ""
-  };
-
-  // Get roomname
-  ref.child('rooms').child(roomIdNumber).once('value', function (snapshot) {
-      if (snapshot.child('roomUid1').val() === $scope.currentUserId) {
-        $scope.roomName = snapshot.child('nameUid1').val()
-      } 
-      else if (snapshot.child('roomUid2').val() === $scope.currentUserId) {
-        $scope.roomName = snapshot.child('nameUid2').val()
-      } 
-      else {
-        console.log("Error getting roomName");
-      }
-  }); 
+  $scope.IM;
+  var selectedRoomId, roomName, roomIdNumber;
   
-  // Could be refactored with 'child_added' but this should work for now
-  ref.child('rooms').child(roomIdNumber).child('chats').on('value', function (snapshot) {
-    // use $timeout to actually update DOM when Firebase changes
-    var chats = snapshot.val();
-    $timeout(function() {
-      $scope.chats = chats;
-    });
+  
+  function getOtherId() {
+    var myUid = $scope.currentUserId;
+    var otherUserUid;
+    ref.child('users').child(myUid).child('hasChatsWith').child(
+      roomIdNumber).child('uid').once('value', function (snapshot) {
+        otherUserUid = snapshot.val();
+      });
+    return otherUserUid;
+  }
+
+  
+  $scope.$on('$ionicView.enter', function(e) {
+    roomIdNumber = $state.params.roomId;
+    $scope.IM = {
+      textMessage: ""
+    };
     
-    for (var key in chats) {
-      if (key === 'deleted') {
-        $timeout(function() {
-          $scope.deletedById = chats['deleted']['deletedById']; 
-        });
+    // Get roomname
+    ref.child('rooms').child(roomIdNumber).once('value', function (snapshot) {
+        if (snapshot.child('roomUid1').val() === $scope.currentUserId) {
+          $scope.roomName = snapshot.child('nameUid1').val()
+        } 
+        else if (snapshot.child('roomUid2').val() === $scope.currentUserId) {
+          $scope.roomName = snapshot.child('nameUid2').val()
+        } 
+        else {
+          console.log("Error getting roomName");
+        }
+    }); 
+    
+    // Could be refactored with 'child_added' but this should work for now
+    ref.child('rooms').child(roomIdNumber).child('chats').on('value', function (snapshot) {
+      // use $timeout to actually update DOM when Firebase changes
+      var chats = snapshot.val();
+      $timeout(function() {
+        $scope.chats = chats;
+      });
+      
+      for (var key in chats) {
+        if (key === 'deleted') {
+          $timeout(function() {
+            $scope.deletedById = chats['deleted']['deletedById']; 
+          });
+        }
       }
-    }
 
+    });
   });
-  
 
   $ionicModal.fromTemplateUrl('templates/modalReport.html', {
     scope: $scope
@@ -186,19 +199,6 @@ angular.module('mychat.controllers', ['firebase'])
     $scope.modalReport.hide();
   }
 
-  // // Delete items from hasNewChatsInRooms when viewed
-  // $scope.$on('$ionicView.enter', function (e) {
-    
-  //   console.log("ENTERED CHAT VIEW");
-    
-  //   // Destroying the 'new' indicator
-  //   if (roomIdNumber) {
-  //     ref.child('users').child($scope.currentUserId).child('hasNewChatsInRooms')
-  //       .child(roomIdNumber).remove();
-  //   }
-    
-  // });
-
   $scope.sendMessage = function(msg) {
     if (msg === "") { alert("Please add a message."); }
 
@@ -212,6 +212,18 @@ angular.module('mychat.controllers', ['firebase'])
       ref.child('rooms').child(roomIdNumber).child('chats').push(chat, 
         function (error) { if (error) { console.log("Error sending message"); } });
 
+      // last message
+      var truncatedMsg = (msg.length > 30) ? msg.substring(0,30) + "..." : msg;
+      var otherUserUid = getOtherId();
+      console.log(otherUserUid);
+      ref.child('users').child($scope.currentUserId).child('hasChatsWith').child(
+        roomIdNumber).child('lastMessage').set(truncatedMsg);
+      ref.child('users').child(otherUserUid).child('hasChatsWith').child(
+        roomIdNumber).child('lastMessage').set(truncatedMsg);      
+
+      // ref.child('rooms').child(roomIdNumber).child('chats').push(chat, 
+      //   function (error) { if (error) { console.log("Error sending message"); } });
+
       $scope.IM.textMessage = "";
     }
   }
@@ -223,12 +235,7 @@ angular.module('mychat.controllers', ['firebase'])
         // Once save is complete, delete from regular Firebase
         ref.child('rooms').child(id).remove();
         // Find out other user id
-        var myUid = $scope.currentUserId
-        var otherUserUid;
-        ref.child('users').child(myUid).child(hasChatsWith).child(
-          id).child('uid').once('value', function (snapshot) {
-            otherUserUid = snapshot.val();
-          });
+        otherUserUid = getOtherId();
         // Delete from hasChatsWith on both accounts
         ref.child('users').child(myUid).child('hasChatsWith').child(
           roomIdNumber).remove();
@@ -278,7 +285,8 @@ angular.module('mychat.controllers', ['firebase'])
         roomsArray.push({
           'id': key,
           'uid': hasChatsWith[key]['uid'],
-          'name': hasChatsWith[key]['name']
+          'name': hasChatsWith[key]['name'],
+          'lastMessage': hasChatsWith[key]['lastMessage'] // last message
         });
       }
       // Then update the scope with $timeout
@@ -334,7 +342,7 @@ angular.module('mychat.controllers', ['firebase'])
         ref.child('rooms').child(id).child('chats').child('deleted').set({
           deletedById: $scope.currentUserId,
           from: "End of Chat",
-          message: $scope.displayname.displayname + " has deleted this message."
+          message: $scope.displayname.displayname + " has deleted this chat."
         }, function(error) {
           if (error) { console.log(error); }
           else { alert("Deletion pending."); }
@@ -396,7 +404,8 @@ angular.module('mychat.controllers', ['firebase'])
 
       for (var prop in usersLookingToChat) {
         // Match found in Firebase
-        if (usersLookingToChat[prop]["type"] == lookingForMeType) {
+        if (usersLookingToChat[prop]["type"] == lookingForMeType && 
+            usersLookingToChat[prop]["id"] != $scope.currentUserId) {
 
           makeNewChat(
             $scope.currentUserId,
@@ -447,12 +456,14 @@ angular.module('mychat.controllers', ['firebase'])
         ref.child('users').child(uid1).child('hasChatsWith').child(
           newChatLocationId).set({
             'uid': uid2,
-            'name': u2Name
+            'name': u2Name,
+            'lastMessage': "" // last message
           });
         ref.child('users').child(uid2).child('hasChatsWith').child(
           newChatLocationId).set({
             'uid': uid1,
-            'name': u1Name
+            'name': u1Name,
+            'lastMessage': "" // last message
           });
       }
     });
