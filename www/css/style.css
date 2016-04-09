@@ -109,7 +109,7 @@
     color: white;
 }
 .custom-login .item-select:after {
-    color: #F2F2F2;
+    color: transparent; /*#F2F2F2;*/
 }
 .custom-login .button.button-full {
     background: white;
@@ -153,6 +153,31 @@ so here we are using input.valid-parse */
     visibility: visible;
 }
 
+/* For "New Chat" modal */
+.custom-login.custom-login-dark-text .custom-radio {
+    color: inherit;
+}
+.custom-login.custom-login-dark-text .input-label, .custom-login.custom-login-dark-text input {
+    color: inherit;
+}
+
+/* Footer bar chat input */
+.custom-footer-bar-chat-input {
+    height: 50px;
+}
+.custom-footer-bar-chat-input ion-item {
+    border: none;
+    width: 100%;
+}
+.custom-footer-bar-chat-input ion-item input {
+    width: 100%;
+    min-width: calc(100% - 70px);
+}
+.custom-footer-bar-chat-input ion-item button {
+    position: absolute;
+    right: 20px;
+    bottom: 3px;
+}
 
 
 

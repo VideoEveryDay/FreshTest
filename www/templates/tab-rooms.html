@@ -1,40 +1,35 @@
 <ion-view view-title="People">
   <ion-content>
     
-    <!-- <div>
-      <button class="button button-clear button-full button-positive" ng-click="requestNewChat()">Find Someone New</button>
+    <div>
+      <button class="button button-clear button-full button-positive" ng-click="chatWithSomeoneNew.show()">Chat with Someone New</button>
       </button>
-    </div>-->
+    </div>
 
-    <div class="card">
-      <!-- <div class="item item-text-wrap">
-        <p class="custom-style-p"><strong>
-          I'm looking for...
-        </strong></p>
-      </div> -->
+    <!-- <div class="card">
       <label class="item item-input item-select">
         <div class="input-label">
           Gender
         </div>
-        <select ng-model="gender">
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Unspecified">Unspecified</option>
-        </select>
+        <ion-list>
+          <ion-radio ng-model="gender" ng-value="'Male'" class="custom-radio">Male</ion-radio>
+          <ion-radio ng-model="gender" ng-value="'Female'" class="custom-radio">Female</ion-radio>
+          <ion-radio ng-model="gender" ng-value="'Unspecified'" class="custom-radio">Unspecified</ion-radio>
+        </ion-list>
       </label>
       <label class="item item-input item-select">
         <div class="input-label">
           Grade
         </div>
-        <select ng-model="grade">
-          <option value="2016">2016</option>
-          <option value="2017">2017</option>
-          <option value="2018">2018</option>
-          <option value="2019">2019</option>
-        </select>
+        <ion-list>
+          <ion-radio ng-model="grade" ng-value="'2016'" class="custom-radio">2016</ion-radio>
+          <ion-radio ng-model="grade" ng-value="'2017'" class="custom-radio">2017</ion-radio>
+          <ion-radio ng-model="grade" ng-value="'2018'" class="custom-radio">2018</ion-radio>
+          <ion-radio ng-model="grade" ng-value="'2019'" class="custom-radio">2019</ion-radio>
+        </ion-list>
       </label>
       <button class="button button-full button-positive button-no-margin" ng-click="requestNewChat(gender, grade)">Chat With Someone New</button>
-    </div>
+    </div> -->
     
     <ion-list ng-show="rooms">
       <!-- Experimental -->

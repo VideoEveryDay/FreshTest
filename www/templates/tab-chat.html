@@ -7,16 +7,7 @@
   <ion-content>
     <div ng-show="roomName">
       <ion-list>
-        <!-- Move this input item below -->
-        <ion-item class="item item-input-inset">
-          <label class="item-input-wrapper">
-            <input type="text" ng-model="IM.textMessage" placeholder="Type in your message...">
-          </label>
-          <button ng-click="sendMessage(IM.textMessage)" class="button button-small button-balanced" ng-disabled="deletedById">
-            Send
-          </button>
-        </ion-item>
-        
+
         <ion-item ng-show="chats === undefined" class="textCenter">
           <i class="icon ion-loading"></i> Loading Chats
         </ion-item>
@@ -58,4 +49,21 @@
 
     <!-- Move input item here and change height to 60px  -->
   </ion-content>
+
+  <ion-footer-bar class="custom-footer-bar-chat-input">
+    <!-- Move this input item below -->
+    <ion-item class="item item-input-inset">
+      
+      <form ng-submit="sendMessage(IM.textMessage)">
+        <input type="text" ng-model="IM.textMessage" placeholder="Type in your message...">
+        <button type="submit" class="button button-small button-positive" ng-disabled="deletedById">
+          Send
+        </button>
+      </form>
+
+    </ion-item>
+  </ion-footer-bar>
+
+  <!-- Scroll link - keep at bottom of page -->
+  <a id="bottom-of-page"></a>
 </ion-view>

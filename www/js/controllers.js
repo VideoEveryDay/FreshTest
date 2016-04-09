@@ -95,16 +95,16 @@ angular.module('mychat.controllers', ['firebase'])
   }
 
   // // If password saved, log user in // ENABLE FOR PRODUCTION
-  if (localStorage.getItem("username") && localStorage.getItem("password")) {
-    $scope.signIn({
-      email: localStorage.getItem("username"),
-      pwdForLogin: localStorage.getItem("password")
-    });
-  }
+  // if (localStorage.getItem("username") && localStorage.getItem("password")) {
+  //   $scope.signIn({
+  //     email: localStorage.getItem("username"),
+  //     pwdForLogin: localStorage.getItem("password")
+  //   });
+  // }
 
 })
 
-.controller('ChatCtrl', function ($scope, $state, $timeout, $ionicModal) {
+.controller('ChatCtrl', function ($scope, $state, $timeout, $ionicModal, $ionicScrollDelegate) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -122,7 +122,6 @@ angular.module('mychat.controllers', ['firebase'])
   $scope.IM;
   var selectedRoomId, roomName, roomIdNumber;
   
-  
   function getOtherId() {
     var myUid = $scope.currentUserId;
     var otherUserUid;
@@ -132,8 +131,8 @@ angular.module('mychat.controllers', ['firebase'])
       });
     return otherUserUid;
   }
-
   
+  // When Ionic enters a new view, eliminate cache and reload the chat
   $scope.$on('$ionicView.enter', function(e) {
     roomIdNumber = $state.params.roomId;
     $scope.IM = {
@@ -169,9 +168,13 @@ angular.module('mychat.controllers', ['firebase'])
         }
       }
 
+      // Use anchorScroll to go to bottom of chats to show user new chats
+      $ionicScrollDelegate.scrollBottom();
+
     });
   });
 
+  /* Reporting */
   $ionicModal.fromTemplateUrl('templates/modalReport.html', {
     scope: $scope
   }).then(function(modalReport) {
@@ -199,6 +202,7 @@ angular.module('mychat.controllers', ['firebase'])
     $scope.modalReport.hide();
   }
 
+  /* Messaging */
   $scope.sendMessage = function(msg) {
     if (msg === "") { alert("Please add a message."); }
 
@@ -251,11 +255,20 @@ angular.module('mychat.controllers', ['firebase'])
 
 })
 
-.controller('RoomsCtrl', function ($scope, $state, $timeout) {
+.controller('RoomsCtrl', function ($scope, $state, $ionicModal, $timeout) {
   console.log("Rooms Controller Initialized");
   $scope.rooms = new Array;
   hasChatsWithIdArray = new Array;
+  $scope.grade = "2017"; // change based on displayname.profile.gender
+  $scope.gender = "Male"; // equal to displayname.profile.grade
   // $scope.isFirstUser;
+
+  /* Chat with Someone New */
+  $ionicModal.fromTemplateUrl('templates/chatWithSomeoneNew.html', {
+    scope: $scope
+  }).then(function(chatWithSomeoneNew) {
+    $scope.chatWithSomeoneNew = chatWithSomeoneNew;
+  });
 
   // // Get rooms
   // if ($scope.currentUserId) {
@@ -270,9 +283,11 @@ angular.module('mychat.controllers', ['firebase'])
   // }
   // else { console.log("Error getting currentUserId"); }
 
+  // Log if user is defined
   if ($scope.currentUserId) { console.log("currentUserId is defined!"); }
   else { console.log("currentUserId is NOT defined!"); }
 
+  // Create array of chats 
   ref.child('users').child($scope.currentUserId).child('hasChatsWith').on('value',
     function (snapshot) {
       roomsArray = [];
@@ -303,8 +318,6 @@ angular.module('mychat.controllers', ['firebase'])
   //   });
   // });
 
-  $scope.grade = "2017"; // change based on displayname.profile.gender
-  $scope.gender = "Male"; // equal to displayname.profile.grade
 
   // // Check for new chats
   // $scope.$on('$ionicView.enter', function (e) {
@@ -326,7 +339,7 @@ angular.module('mychat.controllers', ['firebase'])
   //     });
   // });
 
-  /* Need to change this so that it doesn't ztcually delete but instead sends a
+  /* Need to change this so that it doesn't actually delete but instead sends a
   special message requesting that the chat be deleted with a button that allows
   the other user to actually delete the chat. It should make deleted (child of 
   chat id) true. */
@@ -414,14 +427,14 @@ angular.module('mychat.controllers', ['firebase'])
             usersLookingToChat[prop]["displayname"]
             );
 
-          // Remove the match
+          // Remove the match and break out of the loop
           ref.child('usersLookingToChat').child(prop).remove();
-
           foundMatch = true; break;
         }
         // If dulpicate request, end loop and do nothing          
         else if (usersLookingToChat[prop]["id"] == $scope.currentUserId &&
                  usersLookingToChat[prop]["type"] == lookingForOtherType) {
+          alert("You're already looking for a " + grade + " " + gender + ".");
           foundMatch = true; break;
         }
       }
@@ -435,6 +448,8 @@ angular.module('mychat.controllers', ['firebase'])
         alert("Waiting for a " + grade + " " + gender + " to connect.");
       }
 
+      // Hide request modal
+      $scope.chatWithSomeoneNew.hide();
     });
   };
 

@@ -1,0 +1,44 @@
+<ion-modal-view>
+	<ion-header-bar class="bar bar-header custom-login-header-bar">
+    <h1 class="title">Chat with Someone New!</h1>
+    <button class="button button-clear button-primary" ng-click="chatWithSomeoneNew.hide()">
+      Cancel
+    </button>
+  </ion-header-bar>
+
+  <ion-content class="padding custom-gradient-bg">
+    
+    <div class="card">
+      <div class="card custom-login custom-login-dark-text">
+        <!-- <div class="item item-text-wrap">
+          <p class="custom-style-p"><strong>
+            I'm looking for...
+          </strong></p>
+        </div> -->
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Gender
+          </div>
+          <ion-list>
+            <ion-radio ng-model="gender" ng-value="'Male'" class="custom-radio">Male</ion-radio>
+            <ion-radio ng-model="gender" ng-value="'Female'" class="custom-radio">Female</ion-radio>
+            <ion-radio ng-model="gender" ng-value="'Unspecified'" class="custom-radio">Unspecified</ion-radio>
+          </ion-list>
+        </label>
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Grade
+          </div>
+          <ion-list>
+            <ion-radio ng-model="grade" ng-value="'2016'" class="custom-radio">2016</ion-radio>
+            <ion-radio ng-model="grade" ng-value="'2017'" class="custom-radio">2017</ion-radio>
+            <ion-radio ng-model="grade" ng-value="'2018'" class="custom-radio">2018</ion-radio>
+            <ion-radio ng-model="grade" ng-value="'2019'" class="custom-radio">2019</ion-radio>
+          </ion-list>
+        </label>
+        <button class="button button-full button-positive button-no-margin" ng-click="requestNewChat(gender, grade)">Chat With Someone New</button>
+      </div>
+    </div>
+
+  </ion-content>
+</ion-modal-view>
